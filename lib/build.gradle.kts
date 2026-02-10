@@ -23,4 +23,5 @@ android {
 
 dependencies {
     implementation(libs.androidx.core.ktx)
+    compileOnly(files("classes.jar"))
 }
