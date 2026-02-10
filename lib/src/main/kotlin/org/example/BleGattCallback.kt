@@ -10,8 +10,9 @@ import android.util.Base64
 import androidx.annotation.RequiresPermission
 import com.unity3d.player.UnityPlayer
 
-class BleGattCallback : BluetoothGattCallback()
+class BleGattCallback(private val gameObjectName: String, private val onGnssData: String) : BluetoothGattCallback()
 {
+
     @RequiresPermission(Manifest.permission.BLUETOOTH_CONNECT)
     override fun onConnectionStateChange(gatt: BluetoothGatt?, status: Int, newState: Int)
     {
@@ -43,6 +44,6 @@ class BleGattCallback : BluetoothGattCallback()
     {
         val value = characteristic?.value
         val base64 = Base64.encodeToString(value, Base64.NO_WRAP)
-        UnityPlayer.UnitySendMessage("gnss_research", "onGnssData", base64)
+        UnityPlayer.UnitySendMessage(gameObjectName, onGnssData, base64)
     }
 }

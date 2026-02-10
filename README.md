@@ -10,4 +10,10 @@ create `local.properties` and write below:
 
 ## description
 
+```cs
+AndroidJavaClass ble = new("com.example.BleCentral");
+ble.CallStatic("start", gameObjectName, nameof(onConnect), nameof(onGnssData))
+ble.CallStatic("stop", gameObjectName, nameof(onDisconnect))
+```
+
 `lib/classes.jar` is `C:\Program Files\Unity\Hub\Editor\{version}\Editor\Data\PlaybackEngines\AndroidPlayer\Variations\mono\Release\Classes\classes.jar`

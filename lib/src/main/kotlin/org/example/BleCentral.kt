@@ -20,7 +20,7 @@ object BleCentral
         allOf = [Manifest.permission.BLUETOOTH_SCAN, Manifest.permission.BLUETOOTH_CONNECT]
     )
     @JvmStatic
-    fun start()
+    fun start(gameObjectName: String, onConnect: String, onGnssData: String)
     {
         val ctx = UnityPlayer.currentActivity
         val bm = ctx.getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager
@@ -29,6 +29,7 @@ object BleCentral
         if (adapter == null)
         {
             Log.e("BLE", "Device doesn't support Bluetooth")
+            UnityPlayer.UnitySendMessage(gameObjectName, onConnect, "false")
             return
         }
 
@@ -51,22 +52,25 @@ object BleCentral
         // https://developer.android.com/develop/connectivity/bluetooth/ble/connect-gatt-server
         // Connect to GATT server
         val result = scanCallback.getResult()
-        val gattCallback = BleGattCallback()
+        val gattCallback = BleGattCallback(gameObjectName, onGnssData)
 
         if (result == null)
         {
             Log.e("BLE", "Scan result is null")
+            UnityPlayer.UnitySendMessage(gameObjectName, onConnect, "false")
             return
         }
 
         this.gatt = result.device.connectGatt(ctx, false, gattCallback)
+        UnityPlayer.UnitySendMessage(gameObjectName, onConnect, "true")
     }
 
     @RequiresPermission(Manifest.permission.BLUETOOTH_CONNECT)
     @JvmStatic
-    fun stop()
+    fun stop(gameObjectName: String, onDisconnect: String)
     {
         this.gatt?.close()
         this.gatt = null
+        UnityPlayer.UnitySendMessage(gameObjectName, onDisconnect, "true")
     }
 }
