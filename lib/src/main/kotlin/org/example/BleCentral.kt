@@ -39,8 +39,7 @@ object BleCentral
         val scanner = adapter.bluetoothLeScanner
         val scanSettings = ScanSettings.Builder()
             .setCallbackType(ScanSettings.CALLBACK_TYPE_ALL_MATCHES)
-            .setReportDelay(2000)
-            .setScanMode(ScanSettings.SCAN_MODE_BALANCED)
+            .setScanMode(ScanSettings.SCAN_MODE_LOW_LATENCY)
             .build()
         val scanFilters = listOf(
             ScanFilter.Builder()
