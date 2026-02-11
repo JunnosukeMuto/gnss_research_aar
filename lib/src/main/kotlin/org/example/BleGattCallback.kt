@@ -10,7 +10,10 @@ import android.util.Base64
 import androidx.annotation.RequiresPermission
 import com.unity3d.player.UnityPlayer
 
-class BleGattCallback(private val gameObjectName: String, private val onGnssData: String) : BluetoothGattCallback()
+class BleGattCallback(
+    private val gameObjectName: String,
+    private val onGnssData: String,
+) : BluetoothGattCallback()
 {
 
     @RequiresPermission(Manifest.permission.BLUETOOTH_CONNECT)
