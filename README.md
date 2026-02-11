@@ -8,6 +8,14 @@ create `local.properties` and write below:
 "sdk.dir=C\:\\Users\\{username}\\AppData\\Local\\Android\\Sdk"
 ```
 
+## install
+
+```sh
+./gradlew assembleRelease
+```
+
+move `gnss_research_aar/lib/build/outputs/aar/lib-release.aar` to `UnityProject/Assets/Plugins/Android/`
+
 ## description
 
 ```cs
