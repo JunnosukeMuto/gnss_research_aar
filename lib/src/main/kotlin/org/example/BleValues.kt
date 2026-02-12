@@ -9,5 +9,7 @@ class BleValues
         val SERVICE_UUID: UUID = UUID.fromString("70787d4e-af36-4bfb-901b-37133b5191bb")
         val CHARACTERISTIC_UUID: UUID = UUID.fromString("0b53a515-bf15-44c8-a814-516de5f8a613")
         val CCCD_UUID: UUID = UUID.fromString("00002902-0000-1000-8000-00805f9b34fb")
+        val MANUFACTURER_ID: Int = 0xFFFF
+        val MANUFACTURER_DATA: ByteArray = byteArrayOf(0x12, 0x34, 0x56)
     }
 }

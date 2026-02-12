@@ -1,6 +1,7 @@
 package org.example
 
 import android.Manifest
+import android.bluetooth.BluetoothDevice
 import android.bluetooth.BluetoothGatt
 import android.bluetooth.le.BluetoothLeScanner
 import android.bluetooth.le.ScanCallback
@@ -16,6 +17,7 @@ class BleScanCallback(
     private val gameObjectName: String,
     private val onConnect: String,
     private val onGnssData: String,
+    private val onInfo: String,
     private val setGatt: (BluetoothGatt) -> Unit
 ) : ScanCallback()
 {
@@ -32,8 +34,8 @@ class BleScanCallback(
 
         // https://developer.android.com/develop/connectivity/bluetooth/ble/connect-gatt-server
         // Connect to GATT server
-        val gattCallback = BleGattCallback(gameObjectName, onGnssData)
-        val gatt = result.device.connectGatt(ctx, false, gattCallback)
+        val gattCallback = BleGattCallback(gameObjectName, onGnssData, onInfo)
+        val gatt = result.device.connectGatt(ctx, false, gattCallback, BluetoothDevice.TRANSPORT_LE)
         UnityPlayer.UnitySendMessage(gameObjectName, onConnect, "true")
 
         setGatt(gatt)

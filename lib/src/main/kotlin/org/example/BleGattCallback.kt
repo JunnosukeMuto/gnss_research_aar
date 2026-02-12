@@ -6,6 +6,8 @@ import android.bluetooth.BluetoothGattCallback
 import android.bluetooth.BluetoothGattCharacteristic
 import android.bluetooth.BluetoothGattDescriptor
 import android.bluetooth.BluetoothProfile
+import android.os.Handler
+import android.os.Looper
 import android.util.Base64
 import androidx.annotation.RequiresPermission
 import com.unity3d.player.UnityPlayer
@@ -13,15 +15,26 @@ import com.unity3d.player.UnityPlayer
 class BleGattCallback(
     private val gameObjectName: String,
     private val onGnssData: String,
+    private val onInfo: String,
 ) : BluetoothGattCallback()
 {
 
     @RequiresPermission(Manifest.permission.BLUETOOTH_CONNECT)
     override fun onConnectionStateChange(gatt: BluetoothGatt?, status: Int, newState: Int)
     {
+        UnityPlayer.UnitySendMessage(gameObjectName, onInfo, "onConnectionStateChange: $status, $newState")
+        UnityPlayer.UnitySendMessage(gameObjectName, onInfo, "Address: ${gatt?.device?.address}")
         if (newState == BluetoothProfile.STATE_CONNECTED)
         {
-            gatt?.discoverServices()
+            UnityPlayer.UnitySendMessage(gameObjectName, onInfo, "STATE_CONNECTED")
+            Handler(Looper.getMainLooper()).postDelayed({
+                val result = gatt?.discoverServices()
+                UnityPlayer.UnitySendMessage(
+                    gameObjectName,
+                    onInfo,
+                    "discoverServices result: $result"
+                )
+            }, 500)
         }
     }
 
@@ -36,8 +49,14 @@ class BleGattCallback(
         gatt?.setCharacteristicNotification(characteristic, true)
 
         val descriptor = characteristic?.getDescriptor(BleValues.CCCD_UUID)
-        descriptor?.value = BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE
-        gatt?.writeDescriptor(descriptor)
+        if (descriptor == null)
+        {
+            UnityPlayer.UnitySendMessage(gameObjectName, onInfo, "CCCD is null")
+            return
+        }
+        descriptor.value = BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE
+        gatt.writeDescriptor(descriptor)
+        UnityPlayer.UnitySendMessage(gameObjectName, onInfo, "CCCD enabled")
     }
 
     override fun onCharacteristicChanged(

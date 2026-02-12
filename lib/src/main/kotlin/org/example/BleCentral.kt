@@ -22,7 +22,7 @@ object BleCentral
 
     @RequiresPermission(Manifest.permission.BLUETOOTH_SCAN)
     @JvmStatic
-    fun start(gameObjectName: String, onConnect: String, onGnssData: String)
+    fun start(gameObjectName: String, onConnect: String, onGnssData: String, onInfo: String)
     {
         val ctx = UnityPlayer.currentActivity
         val bm = ctx.getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager
@@ -43,7 +43,8 @@ object BleCentral
             .build()
         val scanFilters = listOf(
             ScanFilter.Builder()
-                .setServiceUuid(ParcelUuid(BleValues.SERVICE_UUID))
+                // .setServiceUuid(ParcelUuid(BleValues.SERVICE_UUID))
+                .setManufacturerData(BleValues.MANUFACTURER_ID, BleValues.MANUFACTURER_DATA)
                 .build(),
         )
         val scanCallback = BleScanCallback(
@@ -52,6 +53,7 @@ object BleCentral
             gameObjectName,
             onConnect,
             onGnssData,
+            onInfo,
             setGatt = { gatt -> this.gatt = gatt }
         )
 
